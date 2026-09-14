@@ -41,9 +41,10 @@ App 内没有自建服务端,所有"智能"能力(计划生成、出题、点评
 |---|---|---|
 | UI/框架 | Flutter | 单代码库覆盖 iOS/Android,个人开发者产出效率高 |
 | 状态管理 | Riverpod | 与领域服务解耦,便于测试 |
-| 本地数据库 | drift(基于 SQLite) | 类型安全的查询构建、迁移管理成熟 |
+| 本地数据库 | drift(基于 SQLite,启用 sqlcipher 加密) | 类型安全的查询构建、迁移管理成熟;加密见第 7 节 |
 | 安全存储 | flutter_secure_storage | 存放 LLM API Key,底层用 Keychain/Keystore |
 | 网络请求 | dio / http | 直接调用 LLM 提供商 REST API |
+| 文档解析 | syncfusion_flutter_pdf / docx 等本地解析库 | 简历 PDF/Word 先在本地提取纯文本,再交给 LLM,不依赖各 Provider 不一致的文件理解能力 |
 
 ## 4. 分层设计与模块边界
 
@@ -59,6 +60,7 @@ App 内没有自建服务端,所有"智能"能力(计划生成、出题、点评
 - **LLM 抽象层**:统一接口 `LlmProvider`,声明领域服务需要的能力(而非通用 chat 接口),例如:
   ```
   abstract class LlmProvider {
+    Future<ResumeParseResult> parseResume(String resumeText);
     Future<PlanDraft> generatePlan(PlanGenerationInput input);
     Future<AnswerFeedback> gradeAnswer(Question q, String answer);
     Future<InterviewTurn> nextInterviewQuestion(InterviewContext ctx);
@@ -83,6 +85,7 @@ App 内没有自建服务端,所有"智能"能力(计划生成、出题、点评
 | mastery | Mastery | 按 `(user, knowledge_point)` 唯一,随 Attempt 增量重算 |
 | mock_interview_sessions | MockInterviewSession | |
 | review_reports | ReviewReport | |
+| app_settings | (架构新增,产品文档未涉及) | 存用户选择的 LLM Provider、模型名等本地配置,单行记录 |
 
 **数据库迁移策略**:使用 drift 的 schema 版本管理,种子数据(岗位库)与用户数据(计划/掌握度等)分开迁移,避免种子数据升级时误清空用户进度。
 
@@ -107,20 +110,23 @@ MockInterviewService 依据低掌握度知识点组装 InterviewContext
 
 两条闭环均在设备本地完整执行,唯一的外部依赖是 LLM 提供商的 API 调用。
 
+**LLM 调用失败处理**:移动网络环境不稳定是常态,所有 `LlmProvider` 调用统一走一层轻量重试(失败自动重试 1 次),仍失败则向 UI 抛出可识别的错误态,由用户手动触发重试;已落库的部分结果(如已生成过的部分 daily_tasks)保留,不因单次调用失败回滚已有数据。
+
 ## 7. 安全与密钥管理
 
 - LLM API Key 由用户在设置页手动输入,存入 `flutter_secure_storage`(iOS Keychain / Android Keystore),不写入代码、不随安装包分发、不出现在日志中。
 - 网络请求仅面向用户配置的 LLM 提供商域名,不经过任何自建中转服务器。
-- 简历文件(PDF/Word)仅在本地解析(或调用 LLM 提供商的文档理解能力,取决于所选 Provider 能力),不上传到除 LLM 提供商之外的第三方。
+- 简历文件(PDF/Word)统一先在本地用文档解析库提取纯文本,再把文本发给 `LlmProvider.parseResume()`,不依赖各 LLM 提供商不一致的文件上传/理解能力,原始文件本身不上传到任何第三方。
+- 本地数据库(drift/SQLite)存有简历、作答内容等个人信息,启用 sqlcipher 做数据库级加密(而非仅依赖系统级全盘加密),加密密钥同样存于 `flutter_secure_storage`。
 
 ## 8. 数据备份与迁移(单设备局限的应对)
 
 当前方案没有云同步,用户仅能在单一设备上使用。为降低"换设备/重装丢数据"的影响,提供:
 
-- **导出**:将本地数据库文件(或导出为 JSON)生成单一备份文件,用户可自行保存(如存入自己的网盘)。
-- **导入**:在新设备上通过该备份文件恢复计划、掌握度、面试记录等全部数据。
+- **导出**:将本地数据库文件(或导出为 JSON)生成单一备份文件,用户设置备份密码后加密写出(与数据库加密复用同一套本地加密能力),用户可自行保存(如存入自己的网盘)。
+- **导入**:在新设备上输入密码解密并恢复计划、掌握度、面试记录等全部数据。
 
-该功能不依赖任何服务端,纯本地文件读写即可实现。
+该功能不依赖任何服务端,纯本地文件读写即可实现;备份文件加密是因为其中包含简历等个人信息,不应以明文形式脱离设备存放。
 
 ## 9. 非目标与未来演进路径
 
