@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>每日学习任务 - 静态 HTML 原型</title>
+</head>
+<body style="margin:0;background:#EEE;padding:32px;">
+  <div style="display:flex;gap:24px;flex-wrap:wrap;justify-content:center;">
+
+    <div style="width:375px;max-width:100%;font-family:-apple-system,sans-serif;background:#FAFAFC;min-height:600px;box-shadow:0 4px 24px rgba(0,0,0,.12);border-radius:16px;overflow:hidden;">
+      <div style="padding:14px 18px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-size:13px;color:#999;">← 返回</div>
+        <div style="font-size:12px;font-weight:700;color:#6C5CE7;">第 3 / 5 题</div>
+      </div>
+      <div style="padding:0 18px;">
+        <div style="height:6px;background:#EEE;border-radius:3px;overflow:hidden;">
+          <div style="width:60%;height:100%;background:linear-gradient(90deg,#6C5CE7,#8E7CF7);"></div>
+        </div>
+      </div>
+
+      <div style="padding:18px;">
+        <span style="background:#FFF1D6;color:#B8860B;font-size:11px;font-weight:700;padding:4px 10px;border-radius:12px;">系统设计 · 核心</span>
+
+        <div style="background:#fff;border-radius:14px;padding:16px;margin-top:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);">
+          <div style="font-size:14px;line-height:1.6;color:#222;">请设计一个短链接生成系统,说明你会如何解决高并发写入和链接唯一性问题?</div>
+        </div>
+
+        <textarea style="width:100%;height:140px;margin-top:14px;border-radius:12px;padding:12px;box-sizing:border-box;font-size:13px;border:1px solid #ddd;" placeholder="在这里输入你的回答…"></textarea>
+
+        <button style="width:100%;background:linear-gradient(90deg,#6C5CE7,#8E7CF7);border:none;color:#fff;padding:14px;border-radius:12px;font-weight:700;font-size:14px;margin-top:14px;">提交作答</button>
+      </div>
+    </div>
+
+    <div style="width:375px;max-width:100%;font-family:-apple-system,sans-serif;background:#FAFAFC;min-height:600px;box-shadow:0 4px 24px rgba(0,0,0,.12);border-radius:16px;overflow:hidden;">
+      <div style="padding:14px 18px;display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-size:13px;color:#999;">← 返回</div>
+        <div style="font-size:12px;font-weight:700;color:#6C5CE7;">第 3 / 5 题</div>
+      </div>
+
+      <div style="padding:18px;">
+        <div style="background:linear-gradient(135deg,#6C5CE7,#00D2A8);border-radius:14px;padding:16px;color:#fff;display:flex;align-items:center;gap:14px;">
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;">82</div>
+          <div>
+            <div style="font-weight:700;font-size:14px;">回答不错!</div>
+            <div style="font-size:12px;opacity:.85;">考虑了分片写入,但唯一性方案可以更严谨</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border-radius:12px;padding:14px;margin-top:14px;box-shadow:0 1px 3px rgba(0,0,0,.06);">
+          <div style="font-size:12px;font-weight:700;color:#6C5CE7;margin-bottom:6px;">📖 参考答案要点</div>
+          <div style="font-size:13px;color:#444;line-height:1.6;">1. 用发号器/雪花算法保证唯一 ID<br/>2. 分库分表水平扩展写入能力<br/>3. 布隆过滤器提前拦截冲突...</div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;">
+          <div style="font-size:12px;color:#AAA;">🚩 这道题/答案有问题?</div>
+        </div>
+
+        <button style="width:100%;background:linear-gradient(90deg,#6C5CE7,#8E7CF7);border:none;color:#fff;padding:14px;border-radius:12px;font-weight:700;font-size:14px;margin-top:16px;">下一题 →</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

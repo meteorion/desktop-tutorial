@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>模拟面试对话页 - 静态 HTML 原型</title>
+</head>
+<body style="margin:0;background:#EEE;padding:32px;">
+  <div style="width:375px;max-width:100%;margin:0 auto;font-family:-apple-system,sans-serif;background:#FAFAFC;min-height:640px;display:flex;flex-direction:column;box-shadow:0 4px 24px rgba(0,0,0,.12);border-radius:16px;overflow:hidden;">
+
+    <div style="background:linear-gradient(135deg,#6C5CE7,#00D2A8);padding:14px 18px;color:#fff;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-size:14px;font-weight:700;">🎤 模拟面试 · 后端开发-Java</div>
+        <div style="font-size:11px;background:rgba(255,255,255,.22);padding:3px 9px;border-radius:10px;">第 4 轮</div>
+      </div>
+    </div>
+
+    <div style="flex:1;padding:16px 14px;display:flex;flex-direction:column;gap:12px;">
+
+      <div style="display:flex;gap:8px;align-items:flex-end;">
+        <div style="width:28px;height:28px;border-radius:50%;background:#6C5CE7;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">AI</div>
+        <div style="background:#fff;border-radius:12px 12px 12px 2px;padding:10px 13px;font-size:13px;color:#333;line-height:1.5;max-width:78%;box-shadow:0 1px 3px rgba(0,0,0,.06);">
+          说说你项目里遇到过的一次线上并发问题,是怎么排查和解决的?
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:flex-end;justify-content:flex-end;">
+        <div style="background:#6C5CE7;color:#fff;border-radius:12px 12px 2px 12px;padding:10px 13px;font-size:13px;line-height:1.5;max-width:78%;">
+          之前遇到过库存超卖,是用 Redis 分布式锁 + 数据库乐观锁解决的...
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:flex-end;">
+        <div style="width:28px;height:28px;border-radius:50%;background:#6C5CE7;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">AI</div>
+        <div style="background:#fff;border-radius:12px 12px 12px 2px;padding:10px 13px;font-size:13px;color:#333;line-height:1.5;max-width:78%;box-shadow:0 1px 3px rgba(0,0,0,.06);">
+          <span style="background:#FFF1D6;color:#B8860B;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;">追问</span><br/>
+          如果分布式锁的持有节点突然宕机,你怎么保证库存不会被永久锁死?
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div style="width:28px;height:28px;border-radius:50%;background:#6C5CE7;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">AI</div>
+        <div style="background:#fff;border-radius:12px;padding:8px 13px;box-shadow:0 1px 3px rgba(0,0,0,.06);">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#BBB;margin-right:3px;"></span>
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#BBB;margin-right:3px;"></span>
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#BBB;"></span>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:10px 14px;border-top:1px solid #EEE;background:#fff;display:flex;gap:8px;align-items:center;">
+      <input style="flex:1;border-radius:20px;padding:10px 14px;font-size:13px;border:1px solid #ddd;" placeholder="输入你的回答…"/>
+      <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#6C5CE7,#8E7CF7);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;">➤</div>
+    </div>
+    <div style="text-align:center;padding:6px 0;font-size:11px;color:#AAA;background:#fff;">结束面试并生成审核报告</div>
+  </div>
+</body>
+</html>
