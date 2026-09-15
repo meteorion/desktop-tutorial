@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -30,7 +30,7 @@ private enum class LearningMode(val label: String) { DailyTasks("每日任务"),
  */
 @Composable
 fun LearningTabScreen(planId: String, positionId: String, onTaskSelected: (DailyTaskEntity) -> Unit) {
-    var mode by remember { mutableStateOf(LearningMode.DailyTasks) }
+    var mode by rememberSaveable { mutableStateOf(LearningMode.DailyTasks) }
 
     Scaffold(containerColor = AppColors.PageBackground) { padding ->
         Column(Modifier.padding(padding)) {
