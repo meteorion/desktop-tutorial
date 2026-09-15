@@ -1,0 +1,11 @@
+[
+  {
+    "id": "backend-java",
+    "name": "后端开发-Java",
+    "knowledgePoints": [
+      {"id": "kp-java-basics", "name": "Java 基础", "weight": 2, "difficulty": 1, "isCore": false},
+      {"id": "kp-concurrency", "name": "并发编程", "weight": 3, "difficulty": 2, "isCore": false},
+      {"id": "kp-system-design", "name": "系统设计", "weight": 4, "difficulty": 3, "isCore": true}
+    ]
+  }
+]

@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--
+        Base application theme. This project renders its UI entirely with Jetpack
+        Compose (see app/theme/Theme.kt, added in Task 7 of the implementation
+        plan) — this XML theme only supplies the launch/splash background and
+        the system-level window attributes Compose itself doesn't own.
+    -->
+    <style name="Theme.InterviewCoach" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
