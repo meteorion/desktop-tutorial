@@ -1,6 +1,6 @@
 # 自适应引导式 AI 面试助手 —— UI 设计文档
 
-- 状态:V1 草案
+- 状态:**V1 草案(已被 [v2](2026-09-16-ai-interview-assistant-ui-design-v2.md) 取代,本文档仅作历史版本对照,不再维护)**
 - 日期:2026-09-14
 - 关联文档:[产品设计文档](2026-09-14-ai-interview-assistant-design.md) · [技术架构设计文档](2026-09-14-ai-interview-assistant-architecture.md)
 - 关键界面静态原型(可直接用浏览器打开):[dashboard.html](ui-mockups/dashboard.html) · [task-list.html](ui-mockups/task-list.html) · [daily-task.html](ui-mockups/daily-task.html) · [free-learning.html](ui-mockups/free-learning.html) · [mock-interview.html](ui-mockups/mock-interview.html) · [mock-interview-tab.html](ui-mockups/mock-interview-tab.html) · [review-report.html](ui-mockups/review-report.html) · [profile.html](ui-mockups/profile.html) · [profile-unconfigured.html](ui-mockups/profile-unconfigured.html) · [ai-request-states.html](ui-mockups/ai-request-states.html)
