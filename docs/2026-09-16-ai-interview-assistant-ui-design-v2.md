@@ -3,7 +3,7 @@
 - 状态:V2 草案(视觉风格与信息架构重做,替代 v1)
 - 日期:2026-09-16
 - 关联文档:[产品设计文档](2026-09-14-ai-interview-assistant-design.md) · [技术架构设计文档](2026-09-14-ai-interview-assistant-architecture.md) · [UI 设计文档 v1(历史版本,渐变游戏化风格)](2026-09-14-ai-interview-assistant-ui-design.md)
-- 关键界面静态原型(可直接用浏览器打开):[dashboard-v2.html](ui-mockups/dashboard-v2.html) · [task-list-v2.html](ui-mockups/task-list-v2.html) · [daily-task-v2.html](ui-mockups/daily-task-v2.html) · [free-learning-v2.html](ui-mockups/free-learning-v2.html) · [mock-interview-v2.html](ui-mockups/mock-interview-v2.html) · [review-report-v2.html](ui-mockups/review-report-v2.html) · [profile-v2.html](ui-mockups/profile-v2.html) · [profile-unconfigured-v2.html](ui-mockups/profile-unconfigured-v2.html) · [mock-interview-list-v2.html](ui-mockups/mock-interview-list-v2.html) · [ai-request-states-v2.html](ui-mockups/ai-request-states-v2.html)
+- 关键界面静态原型(可直接用浏览器打开):[onboarding-v2.html](ui-mockups/onboarding-v2.html) · [dashboard-v2.html](ui-mockups/dashboard-v2.html) · [task-list-v2.html](ui-mockups/task-list-v2.html) · [daily-task-v2.html](ui-mockups/daily-task-v2.html) · [free-learning-v2.html](ui-mockups/free-learning-v2.html) · [mock-interview-v2.html](ui-mockups/mock-interview-v2.html) · [review-report-v2.html](ui-mockups/review-report-v2.html) · [profile-v2.html](ui-mockups/profile-v2.html) · [profile-unconfigured-v2.html](ui-mockups/profile-unconfigured-v2.html) · [mock-interview-list-v2.html](ui-mockups/mock-interview-list-v2.html) · [ai-request-states-v2.html](ui-mockups/ai-request-states-v2.html)
 
 ## 0. 与 v1 的主要变化
 
@@ -31,37 +31,45 @@ v1 文档保留作为历史版本对照,不再维护。
   - 「每日任务」对应产品文档 2.4,直接进入当日任务队列。
   - 「自由学习」对应产品文档 2.5,AI 主导回顾式问答。
   - 两者只是导航层合并入同一个 Tab,数据/交互逻辑仍是各自独立的机制(自由学习不占用当日任务进度,见 3.4)。
-- **我的**放置三组内容:求职进展(含**模拟面试**入口行,显示"已解锁 · N 次记录"或"未解锁 · 还差 X%",点击进入 3.9;以及目标岗位/薪资、简历重新导入)、AI 服务(LLM Provider/API Key 配置)、数据备份导出。
+- **我的**放置三组内容:求职进展(含**模拟面试**入口行,显示"已解锁 · N 次记录"或"未解锁 · 还差 X%",点击进入 3.10;以及目标岗位/薪资、简历重新导入)、AI 服务(LLM Provider/API Key 配置)、数据备份导出。
 
 ## 3. 关键界面(HTML 原型)
 
-### 3.1 首页 / 掌握进度看板([dashboard-v2.html](ui-mockups/dashboard-v2.html))
+### 3.1 引导页 · 目标设定与简历导入([onboarding-v2.html](ui-mockups/onboarding-v2.html))
+
+- 对应产品文档 2.1,原 v1 归为"非核心界面,仅文字说明",本轮补齐视觉稿。
+- 表单态:目标岗位、目标薪资两个选择器 + 简历导入入口(虚线框,标注"AI 会据此预填岗位/薪资,并识别你已掌握的知识点"),下方明确提示"不上传也可以,直接从零开始评估",呼应产品文档 5. 边界情况中"未导入简历不影响主流程"的说明。
+- 解析结果确认态:简历解析后预填的岗位/薪资字段旁带「推测填写,请确认」标签(沿用警示态配色 `#FFF4E5`/`#8A5A00`),不静默填入,呼应产品文档 2.1"置信度低或信息不足需明确标注"的要求;同时展示识别出的能力项列表,让用户对"AI 读懂了简历的什么内容"有直观预期。
+- 岗位/薪资选择器在本轮原型中用下拉框示意,具体是下拉框还是底部弹层(bottom sheet)留给实现阶段按 Android 平台惯例选择,不影响本设计的信息结构。
+- 现有 Kotlin 实现([OnboardingScreen.kt](../app/src/main/java/com/interviewcoach/feature/onboarding/OnboardingScreen.kt))目前只做了岗位选择一项,还是 v1 渐变风格,薪资区间与简历导入待补齐,见第 6 节待细化项。
+
+### 3.2 首页 / 掌握进度看板([dashboard-v2.html](ui-mockups/dashboard-v2.html))
 
 - 顶部卡片:目标岗位、连续学习天数(小徽标,保留 🔥 作为唯一的情绪化点缀)、整体掌握度环形进度 + 距解锁模拟面试的差距文案,不再用渐变底色,环形进度描边改为单色翡翠绿。
 - 中部知识点列表:每个知识点一条描边卡片,进度条颜色随分数区间变化(低 `#E8735C` → 中 `#D9A441` → 高 `#0E9F6E`,低饱和取代原红黄绿高饱和),核心知识点带浅色「核心」标记。
 - 模拟面试入口:未解锁时以描边卡片 + 文字状态呈现(不再用虚线+🔒图标),明确指出卡点是哪个知识点。
 - 底部大按钮直接跳转到当日未完成任务。
 
-### 3.2 学习 Tab · 今日任务清单([task-list-v2.html](ui-mockups/task-list-v2.html))
+### 3.3 学习 Tab · 今日任务清单([task-list-v2.html](ui-mockups/task-list-v2.html))
 
 - 顶部为分段控件(每日任务 / 自由学习),当前在「每日任务」。
 - 任务列表混排题库练习和知识卡片两种类型,用简化线性图标区分(不再用 📘/🗂 emoji);已完成项保留完整饱和度的翡翠绿对勾、仅文字变灰加删除线,当前该做的一项用翡翠绿描边高亮,未开始项弱化处理。
 - 核心知识点的任务带浅色「核心」标签,呼应首页解锁条件里对核心知识点的强调。
 
-### 3.3 每日学习任务(题库作答)([daily-task-v2.html](ui-mockups/daily-task-v2.html))
+### 3.4 每日学习任务(题库作答)([daily-task-v2.html](ui-mockups/daily-task-v2.html))
 
 - 顶部题号 + 进度条(纯色翡翠绿,不再渐变)。
 - 提交后切换为反馈态:圆形得分 + 一句话简评 + 参考答案要点。
 - 「标记有误」改为纯文字次要入口(去掉 🚩 emoji),保持低视觉权重但可发现。
 
-### 3.4 学习 Tab · 自由学习([free-learning-v2.html](ui-mockups/free-learning-v2.html))
+### 3.5 学习 Tab · 自由学习([free-learning-v2.html](ui-mockups/free-learning-v2.html))
 
-- 顶部沿用与 3.2 相同的分段控件,当前在「自由学习」,强化"这是同一个 Tab 的另一种模式"而不是完全独立的功能区。
+- 顶部沿用与 3.3 相同的分段控件,当前在「自由学习」,强化"这是同一个 Tab 的另一种模式"而不是完全独立的功能区。
 - 核心是「AI 为你选了 XX 知识点做回顾」的提示卡片,体现产品文档 2.5 的「AI 主导回顾式问答」;卡片右侧「换一个」允许跳过本次系统选择的知识点。
-- 不显示题号/进度条(区别于 3.3 的每日任务)。
-- 作答与反馈交互复用 3.3 已定义的提交/点评组件。
+- 不显示题号/进度条(区别于 3.4 的每日任务)。
+- 作答与反馈交互复用 3.4 已定义的提交/点评组件。
 
-### 3.5 模拟面试对话页([mock-interview-v2.html](ui-mockups/mock-interview-v2.html))
+### 3.6 模拟面试对话页([mock-interview-v2.html](ui-mockups/mock-interview-v2.html))
 
 - 顶部条改为纯色翡翠绿背景(不再是渐变),对话区回归朴素的聊天气泡样式。
 - AI 追问的消息带「追问」标签,呼应产品文档 2.9 的多轮追问机制。
@@ -69,31 +77,31 @@ v1 文档保留作为历史版本对照,不再维护。
 - 「结束面试并生成审核报告」常驻底部,不可逆操作需二次确认弹窗。
 - 导航上挂在"我的 → 模拟面试"的栈下(从首页入口卡片或"我的"入口行进入均可到达)。
 
-### 3.6 AI 审核报告页([review-report-v2.html](ui-mockups/review-report-v2.html))
+### 3.7 AI 审核报告页([review-report-v2.html](ui-mockups/review-report-v2.html))
 
 - 顶部综合得分与"比上次 +6"的趋势对比,顶部条改为纯色翡翠绿。
 - 维度得分区分「有数据的维度」和「敬请期待」的非语言信号维度(灰显 + 弱化)。
 - 亮点/不足/建议改为左侧色条 + 文字的卡片(去掉 ✅⚠️💡 emoji),用色条颜色区分性质(亮点翡翠绿、不足暖橙、建议中性灰底)。
 - 底部 CTA 直接把"薄弱知识点"接回学习流程。
 
-### 3.7 我的([profile-v2.html](ui-mockups/profile-v2.html))
+### 3.8 我的([profile-v2.html](ui-mockups/profile-v2.html))
 
 - 分三组信息:**求职进展**(新增「模拟面试」入口行,显示解锁状态/次数;目标岗位与薪资、重新导入简历)、**AI 服务**(LLM Provider、API Key 配置状态)、**数据**(导出备份/从备份恢复)。
 - 列表行不使用右侧箭头图标引导跳转,用页面顶部一行说明文字替代箭头传达可点性(沿用 v1 视觉评审的结论)。
 - API Key 状态用「已配置」的文字+颜色直接反馈配置结果。
 - 图标从 emoji(🎯📄🤖🔑⬇️⬆️)改为纯文字标签或简单排版符号,视觉上更统一、不花哨。
 
-### 3.8 我的 · API Key 未配置态([profile-unconfigured-v2.html](ui-mockups/profile-unconfigured-v2.html))
+### 3.9 我的 · API Key 未配置态([profile-unconfigured-v2.html](ui-mockups/profile-unconfigured-v2.html))
 
 - 页面顶部警示卡片说明"配置后才能生成计划、批改作答、进行模拟面试",直接给出配置入口。警示态配色沿用 v1 已验证的方案(背景 `#FFF4E5` + 文字 `#8A5A00`),不随本轮改色。
 - 「LLM 提供商」显示"未选择"、「API Key」显示醒目的暖色"未配置",与已配置态的翡翠绿"已配置"形成清楚的状态对比。
 
-### 3.9 模拟面试列表/发起页([mock-interview-list-v2.html](ui-mockups/mock-interview-list-v2.html))
+### 3.10 模拟面试列表/发起页([mock-interview-list-v2.html](ui-mockups/mock-interview-list-v2.html))
 
 - 原 v1 的"模拟面试 Tab 落地页"改为"我的 → 模拟面试"的二级页,内容不变:**未解锁**(描边卡片 + 差距文案 + "去学习"引导按钮)和**已解锁**("开始新的模拟面试"大按钮 + 历次报告列表)。
-- 历次报告列表按时间倒序展示每次的综合得分和相对上次的涨跌;点击某一条跳转到该次的 3.6 审核报告页。
+- 历次报告列表按时间倒序展示每次的综合得分和相对上次的涨跌;点击某一条跳转到该次的 3.7 审核报告页。
 
-### 3.10 AI 请求状态([ai-request-states-v2.html](ui-mockups/ai-request-states-v2.html))
+### 3.11 AI 请求状态([ai-request-states-v2.html](ui-mockups/ai-request-states-v2.html))
 
 所有触发 LLM 调用的操作(提交作答、自由学习换一题、生成计划、解析简历等)统一复用这一组状态:
 
@@ -104,10 +112,9 @@ v1 文档保留作为历史版本对照,不再维护。
 
 | 界面 | 关键内容 | 对应产品文档 |
 |---|---|---|
-| 目标设定与简历导入 | 岗位选择器(标准岗位库)、薪资区间选择、简历上传入口(可跳过)、解析结果确认卡片(标注"以下为推测填写") | 2.1 |
 | 计划确认 | 计划周期概览、每日任务量、知识点覆盖列表,支持增删单个知识点/调整节奏,底部"确认计划"按钮 | 2.3 |
 
-这两个界面复用关键界面已确立的组件(见第 5 节),后续如需要可以再单独细化视觉稿。
+这个界面复用关键界面已确立的组件(见第 5 节),后续如需要可以再单独细化视觉稿。(目标设定与简历导入已在 3.1 补充视觉稿,不再归为非核心界面)
 
 ## 5. 设计系统基础
 
@@ -148,8 +155,8 @@ v1 文档保留作为历史版本对照,不再维护。
 
 ## 6. 待细化项
 
-- 目标设定 / 计划确认两个非核心界面仍只有文字描述,需要时可复用现有关键界面的浏览器原型流程继续细化。
+- 计划确认仍只有文字描述,需要时可复用现有关键界面的浏览器原型流程继续细化。
 - 知识卡片(2.4 的第二种学习内容形式)的阅读页尚未设计具体样式。
-- 非语言信号维度上线(语音/视频模态)后,审核报告页(3.6)的"敬请期待"态需要替换为真实数据展示方案。
+- 非语言信号维度上线(语音/视频模态)后,审核报告页(3.7)的"敬请期待"态需要替换为真实数据展示方案。
 - 深色模式本轮未设计,色板已按 Material3 token 组织,后续可在此基础上扩展深色主题。
-- Compose 端现有的 `GradientHeader.kt` / `GradientPrimaryButton.kt` 两个组件按 v1 渐变风格实现,需要按本文档重写为纯色版本(实现层面的落地工作,不在本设计文档范围内,见实现计划)。
+- Compose 端现有的 `GradientHeader.kt` / `GradientPrimaryButton.kt` 两个组件按 v1 渐变风格实现,需要按本文档重写为纯色版本;`OnboardingScreen.kt` 目前只实现了岗位选择,薪资区间和简历导入(含 3.1 的解析确认态)待补齐(实现层面的落地工作,不在本设计文档范围内,见实现计划)。
