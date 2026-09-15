@@ -254,7 +254,20 @@ Card(border = BorderStroke(2.dp, AppColors.ButtonPurpleLight)) {
 Card(border = BorderStroke(1.dp, AppColors.CardBorder)) {
 ```
 
-- [ ] **Step 9: Build**
+- [ ] **Step 9: Ensure the Material3 experimental API opt-in is enabled**
+
+Task 3 uses `SegmentedButton`/`SingleChoiceSegmentedButtonRow`, which are `@ExperimentalMaterial3Api`. Check `app/build.gradle.kts`'s `kotlinOptions` block:
+
+```kotlin
+kotlinOptions {
+    jvmTarget = "17"
+    freeCompilerArgs += listOf("-opt-in=androidx.compose.material3.ExperimentalMaterial3Api")
+}
+```
+
+If the `freeCompilerArgs` line isn't already there (check with `grep -n "ExperimentalMaterial3Api" app/build.gradle.kts`), add it now — later tasks depend on it and won't compile without it.
+
+- [ ] **Step 10: Build**
 
 ```bash
 ./gradlew :app:compileDebugKotlin
@@ -262,7 +275,7 @@ Card(border = BorderStroke(1.dp, AppColors.CardBorder)) {
 
 Expected: `BUILD SUCCESSFUL`, no references to `PrimaryPurple`, `PrimaryTeal`, `ButtonPurpleLight`, `MasteryLowStart/End`, `MasteryMidEnd`, `MasteryHighStart/End`, `GradientHeader`, or `GradientPrimaryButton` remain (`grep -rn "PrimaryPurple\|PrimaryTeal\|ButtonPurpleLight\|MasteryLowStart\|MasteryLowEnd\|MasteryMidEnd\|MasteryHighStart\|MasteryHighEnd\|GradientHeader\|GradientPrimaryButton" app/src/main` prints nothing).
 
-- [ ] **Step 10: Commit**
+- [ ] **Step 11: Commit**
 
 ```bash
 git add -A
