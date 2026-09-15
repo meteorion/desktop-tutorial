@@ -63,7 +63,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel()) {
                     trailingContent = {
                         Text(
                             if (isConfigured) "已配置 ✓" else "未配置",
-                            color = if (isConfigured) AppColors.MasteryHighEnd else AppColors.MasteryLowStart,
+                            color = if (isConfigured) AppColors.MasteryHigh else AppColors.MasteryLow,
                         )
                     },
                     modifier = Modifier.clickable { showDialog = true },

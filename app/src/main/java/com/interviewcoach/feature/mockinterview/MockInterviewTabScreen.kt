@@ -50,7 +50,7 @@ fun MockInterviewTabScreen(
     Scaffold(topBar = { TopAppBar(title = { Text("模拟面试") }) }) { padding ->
         if (!isUnlocked) {
             Column(Modifier.padding(padding).padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                Card(border = BorderStroke(2.dp, AppColors.ButtonPurpleLight)) {
+                Card(border = BorderStroke(1.dp, AppColors.CardBorder)) {
                     Column(Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(Icons.Outlined.Lock, contentDescription = null)
                         Text("模拟面试待解锁")

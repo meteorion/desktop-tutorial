@@ -92,7 +92,12 @@ private fun ResolvedKnowledgePoint(
 ) {
     var kp by remember(knowledgePointId) { mutableStateOf<KnowledgePointEntity?>(null) }
     LaunchedEffect(knowledgePointId) { kp = shellViewModel.getKnowledgePoint(positionId, knowledgePointId) }
-    kp?.let(content) ?: Box(Modifier.fillMaxSize()) { CircularProgressIndicator(Modifier.align(Alignment.Center)) }
+    val currentKp = kp
+    if (currentKp != null) {
+        content(currentKp)
+    } else {
+        Box(Modifier.fillMaxSize()) { CircularProgressIndicator(Modifier.align(Alignment.Center)) }
+    }
 }
 
 @Composable

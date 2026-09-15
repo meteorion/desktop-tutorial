@@ -42,8 +42,8 @@ fun TaskListScreen(planId: String, onTaskSelected: (DailyTaskEntity) -> Unit, vi
                     ListItem(
                         modifier = Modifier.clickable(enabled = !task.completed) { onTaskSelected(task) },
                         leadingContent = {
-                            if (task.completed) Icon(Icons.Filled.CheckCircle, null, tint = AppColors.MasteryHighEnd)
-                            else Icon(if (task.taskType == "practice") Icons.Outlined.MenuBook else Icons.Outlined.Style, null, tint = AppColors.PrimaryPurple)
+                            if (task.completed) Icon(Icons.Filled.CheckCircle, null, tint = AppColors.MasteryHigh)
+                            else Icon(if (task.taskType == "practice") Icons.Outlined.MenuBook else Icons.Outlined.Style, null, tint = AppColors.Accent)
                         },
                         headlineContent = {
                             Text(
