@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -38,6 +40,7 @@ import java.util.Locale
 fun MockInterviewTabScreen(
     planId: String,
     isUnlocked: Boolean, // derived from PlanEntity.status by the caller, never recomputed live here
+    onBack: () -> Unit,
     onStartNewSession: () -> Unit,
     onGoLearn: () -> Unit,
     onOpenReport: (ReviewReportEntity) -> Unit,
@@ -47,7 +50,12 @@ fun MockInterviewTabScreen(
     val reports by viewModel.reports.collectAsState()
     val dateFormat = remember { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) }
 
-    Scaffold(topBar = { TopAppBar(title = { Text("模拟面试") }) }) { padding ->
+    Scaffold(topBar = {
+        TopAppBar(
+            title = { Text("模拟面试") },
+            navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回") } },
+        )
+    }) { padding ->
         if (!isUnlocked) {
             Column(Modifier.padding(padding).padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 Card(border = BorderStroke(1.dp, AppColors.CardBorder)) {

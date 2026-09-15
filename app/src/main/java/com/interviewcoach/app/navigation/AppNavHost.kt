@@ -4,10 +4,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Chat
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.MenuBook
-import androidx.compose.material.icons.outlined.Mic
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -36,10 +34,9 @@ import com.interviewcoach.core.storage.entity.PlanEntity
 import com.interviewcoach.core.storage.entity.ReviewReportEntity
 import com.interviewcoach.domain.service.PlanService
 import com.interviewcoach.feature.dashboard.DashboardScreen
-import com.interviewcoach.feature.freelearning.FreeLearningScreen
 import com.interviewcoach.feature.learning.CardScreen
 import com.interviewcoach.feature.learning.DailyTaskScreen
-import com.interviewcoach.feature.learning.TaskListScreen
+import com.interviewcoach.feature.learning.LearningTabScreen
 import com.interviewcoach.feature.mockinterview.MockInterviewChatScreen
 import com.interviewcoach.feature.mockinterview.MockInterviewTabScreen
 import com.interviewcoach.feature.mockinterview.ReviewReportScreen
@@ -77,8 +74,6 @@ private fun OnboardingFlow(onPlanConfirmed: () -> Unit) {
 private enum class MainTab(val route: String, val label: String, val icon: ImageVector) {
     Dashboard("dashboard", "首页", Icons.Outlined.Home),
     Learning("learning", "学习", Icons.Outlined.MenuBook),
-    FreeLearning("free_learning", "自由学习", Icons.Outlined.Chat),
-    MockInterview("mock_interview", "模拟面试", Icons.Outlined.Mic),
     Profile("profile", "我的", Icons.Outlined.Person),
 }
 
@@ -130,11 +125,14 @@ private fun MainShellNav(plan: PlanEntity, onPlanChanged: () -> Unit) {
         },
     ) { padding ->
         NavHost(navController, startDestination = MainTab.Dashboard.route, modifier = Modifier.padding(padding)) {
-            composable(MainTab.Dashboard.route) { DashboardScreen(positionId = plan.positionId) }
+            composable(MainTab.Dashboard.route) {
+                DashboardScreen(positionId = plan.positionId) // Task 4 expands this call
+            }
 
             composable(MainTab.Learning.route) {
-                TaskListScreen(
+                LearningTabScreen(
                     planId = plan.id,
+                    positionId = plan.positionId,
                     onTaskSelected = { task ->
                         val routeName = if (task.taskType == "card") "card" else "daily_task"
                         navController.navigate("$routeName/${task.id}/${task.knowledgePointId}")
@@ -142,12 +140,13 @@ private fun MainShellNav(plan: PlanEntity, onPlanChanged: () -> Unit) {
                 )
             }
 
-            composable(MainTab.FreeLearning.route) { FreeLearningScreen(positionId = plan.positionId) }
+            composable(MainTab.Profile.route) { ProfileScreen() } // Task 5 expands this call
 
-            composable(MainTab.MockInterview.route) {
+            composable("mock_interview") {
                 MockInterviewTabScreen(
                     planId = plan.id,
                     isUnlocked = plan.status == "unlocked_mock_interview",
+                    onBack = { navController.popBackStack() },
                     onStartNewSession = {
                         scope.launch {
                             val sessionId = shellViewModel.startMockInterviewSession(plan.id, plan.positionId)
@@ -163,8 +162,6 @@ private fun MainShellNav(plan: PlanEntity, onPlanChanged: () -> Unit) {
                     },
                 )
             }
-
-            composable(MainTab.Profile.route) { ProfileScreen() }
 
             composable("daily_task/{taskId}/{kpId}") { entry ->
                 val taskId = entry.arguments?.getString("taskId") ?: return@composable
@@ -215,7 +212,7 @@ private fun MainShellNav(plan: PlanEntity, onPlanChanged: () -> Unit) {
                         weakKnowledgePointIds = ids,
                         onSessionEnded = { report ->
                             selectedReport = report
-                            navController.navigate("review_report") { popUpTo(MainTab.MockInterview.route) }
+                            navController.navigate("review_report") { popUpTo("mock_interview") }
                         },
                     )
                 } ?: Box(Modifier.fillMaxSize()) { CircularProgressIndicator(Modifier.align(Alignment.Center)) }
